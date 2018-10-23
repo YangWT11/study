@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<div id='app'>
+			<input id='input' v-model='text' type='text'>{{text}}
+			<input id='input' v-model='text2' type='text'>{{text2}}
+		</div>
+	</body>
+	<script>
+		//这是vue的主体
+		function vue(options){
+			this.data = options.data;
+			let data = this.data;
+			let id = options.el;
+			observe(data,this);
+			let app = document.getElementById(id);
+			app.appendChild(nodeToDocumentFragment(app,this))
+		}
+		
+		//observe
+		function observe(data,vm){
+			//这里的data的每个属性就是订阅者
+			Object.keys(data).forEach(function(key){
+				definePropertyVue(vm.data,key,data[key]);
+			})
+		}
+		
+		//这里为data的每一个属性都定制了一个闭包，存储着这个属性对应的所有订阅者
+		function definePropertyVue(obj,key,val){
+			var dep = new Dep();//其实这里添加进来的是一个watcher
+			Object.defineProperty(obj,key,{
+				get:function(){
+					//如果全局变量有东西的话，就添加进来
+					//所以有一个key很重要
+					if(Dep.target){
+						dep.subs.push(Dep.target);
+					}
+					return val;
+				},
+				set:function(newVal){
+					if(newVal!=val){
+						val=newVal;
+						//作为发布者要发布给所有的订阅者
+						dep.notify();
+					}
+				}
+			})
+		}
+		
+		//先实现nodeToElementFragment
+		function nodeToDocumentFragment(node,vm){
+			let fragment = document.createDocumentFragment();
+			let child;
+			while(child = node.firstChild ){
+			console.log(child)
+				compile(child,vm);
+				fragment.append(child);//dom中的结点会被删除掉
+			}
+			return fragment;
+		}
+		
+		//实现model到view
+		function compile(node,vm){ //这一步是将data映射到dom树上
+			if(node.nodeType==1){//这是节点
+				let attributes= node.attributes;
+				for(let i=0;i<attributes.length;i++){
+					let attribute = attributes[i];
+					if(attribute.nodeName == 'v-model'){ //绑定了model
+						//还要给node添加监听，如果它的value改变了，那么就需要把data里的改变
+						node.addEventListener('input',function(e){
+							vm.data[attribute.nodeValue]=e.target.value;
+						})
+						node.value = vm.data[attribute.nodeValue]; //vm的data
+						//还要移除它
+						node.removeAttribute('v-model');
+					}
+				}
+			}
+			
+			let reg = /\{\{(.*)\}\}/;  //这是用来测试形如{{text}}的绑定文本
+			if(node.nodeType == 3){ //text节点
+				if(reg.test(node.nodeValue)){//只拿第一个
+					let key=RegExp.$1;
+					key=key.trim();
+					node.nodeValue = vm.data[key];
+					new Watcher(node,vm,key);
+				}
+			}
+		}
+		
+		function Dep(){
+			this.subs=[];
+		}
+		
+		Dep.prototype.notify = function(){
+			this.subs.forEach(sub=>sub.update());//其实触发的是watcher的update
+		}
+		
+		function Watcher(node,vm,name){
+			Dep.target=this;
+			this.name=name;
+			this.node=node;
+			this.vm=vm;
+			this.update();
+			Dep.target=null;
+		}
+		
+		Watcher.prototype={
+			update:function(){
+				this.get();
+				this.node.nodeValue=this.value;
+			},
+			get:function(){
+				this.value=this.vm.data[this.name];
+			}
+		}
+		
+		let v=new vue({
+			el:'app',
+			data:{
+				text:'ywt',
+				text2:'yzh',
+			}
+		});
+	</script>
+</html>
