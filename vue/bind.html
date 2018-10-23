@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<button id='1'>test1</button>
+		<button id='2'>test2</button>
+		<button id='3'>test3</button>
+	</body>
+	<script>
+		//首先需要实现最基础的，就是绑定this，然后执行函数
+		//然而你却发现没法传参数
+		function test1(){
+			Function.prototype.testBind = function(context){
+				var _this=this;
+				let func=function(){
+					_this.apply(context);//这样就简单的通过apply来使得this变成这个了
+				}
+				return func;
+			}
+			var obj = {
+				log:function(param){
+					console.log(this.value);//obj2
+					console.log(param)//undefine
+					console.log(arguments.length)//0
+				},
+				value:'obj'
+			}
+			var obj2 = {
+				value:'obj2'
+			}
+			obj.log.testBind(obj2)();
+		}
+		document.getElementById('1').onclick=function(){
+			test1();
+		}
+		
+		//这时候你会考虑bind中有参数，真正执行的函数也有参数，于是
+		function test2(){
+			Function.prototype.testBind = function(context){
+				var _this=this;
+				var args=Array.prototype.slice.apply(arguments,[1]);//把第一个context去掉，传进来的参数顺序应该是context,...args
+				//此时args为['ywt']
+				let func=function(){
+					args=args.concat(Array.prototype.slice.apply(arguments,[0]));//这里的args为['ywt','is so cool']
+					_this.apply(context,args);
+				}
+				return func;
+			}
+			var obj = {
+				log:function(...param){
+					console.log(this)
+					console.log(this.value);//obj2
+					console.log(...param);//ywt is so cool!
+					console.log(arguments.length);//2
+				},
+				value:'obj'
+			}
+			var obj2 = {
+				value:'obj2'
+			}
+			obj.log.testBind(obj2,'ywt')('is so cool!');
+			//这时候还有什么问题
+			//绑定过后的函数被new实例化之后，需要继承原函数的原型链方法，且绑定过程中提供的this被忽略（继承原函数的this对象），但是参数还是会使用。
+		}
+		document.getElementById('2').onclick=function(){
+			test2();
+		}
+		
+		/*
+		function test3(){
+			var test = function(context){
+				var _this=this;
+				console.log(_this)
+				var args=Array.prototype.slice.apply(arguments,[1]);
+				var fNOP=function(){};
+				let func=function(){
+					console.log(this instanceof fNOP)
+					args=args.concat(Array.prototype.slice.apply(arguments,[0]));
+					_this.apply(this instanceof fNOP?this:context||window,args);
+				}
+				fNOP.prototype=_this.prototype;
+				func.prototype=new fNOP();
+				return func;
+			}
+			Function.prototype.testBind = test;
+			var obj = {
+				log:function(...param){
+					console.log(this)
+					console.log(this.value);
+					console.log(...param);
+					console.log(arguments.length);
+				},
+				value:'obj'
+			}
+			var obj2 = {
+				value:'obj2'
+			}
+			//obj.log.testBind(obj2,'ywt')('is so cool!');
+			var a=new test(obj)();//{value: "obj2"}是obj2这个对象，但是我们期待的是a
+		}
+		document.getElementById('3').onclick=function(){
+			test3();
+		}*/
+	</script>
+</html>

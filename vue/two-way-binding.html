@@ -14,6 +14,7 @@
 			this.data = options.data;
 			let data = this.data;
 			let id = options.el;
+			//观察vue的所有data
 			observe(data,this);
 			let app = document.getElementById(id);
 			app.appendChild(nodeToDocumentFragment(app,this))
@@ -21,7 +22,7 @@
 		
 		//observe
 		function observe(data,vm){
-			//这里的data的每个属性就是订阅者
+			//这里的data的每个属性就是发布者
 			Object.keys(data).forEach(function(key){
 				definePropertyVue(vm.data,key,data[key]);
 			})
@@ -85,7 +86,7 @@
 					let key=RegExp.$1;
 					key=key.trim();
 					node.nodeValue = vm.data[key];
-					new Watcher(node,vm,key);
+					new Watcher(node,vm,key);//这里是订阅者
 				}
 			}
 		}
