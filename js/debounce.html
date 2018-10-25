@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<button id='1'>1s后输出一次</button>
+		<button id='2'>输出后2s后才能继续输出</button>
+	</body>
+	<script>
+		function debounce(fn,delay,immediately=false){
+			let timer;//闭包的timer
+			let execute = false;
+			return function() {
+                const context = this;
+                const args = arguments;
+
+                if(immediately){
+                    //如果立即执行的话，就要记一个是否执行过
+					if(!execute){
+					    fn.apply(context,args);
+					    execute=true;
+					    timer=setTimeout(function () {
+							execute=false;
+							console.log("执行了")
+							clearTimeout(timer);
+                        },delay);
+					}
+				}else{
+                    //如果不是立即执行，就要重置timer
+                    if(timer) {
+                        clearTimeout(timer);
+                    }
+                    timer = setTimeout(function () {
+                        fn.apply(context,args);
+                    }, delay);
+				}
+            }
+		}
+		document.getElementById("1").onclick=debounce(function () {console.log('我1s后执行了')},1000);
+        document.getElementById("2").onclick=debounce(function () {console.log('我立即执行了')},2000,true);
+	</script>
+</html>

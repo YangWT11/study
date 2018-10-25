@@ -15,12 +15,12 @@
 			let data = this.data;
 			let id = options.el;
 			//观察vue的所有data
-			observe(data,this);
+			observe(data,this);//step3
 			let app = document.getElementById(id);
 			app.appendChild(nodeToDocumentFragment(app,this))
 		}
 		
-		//observe
+		//step3.1:observe，考虑当data数据改变时，让每个data都成为发布者
 		function observe(data,vm){
 			//这里的data的每个属性就是发布者
 			Object.keys(data).forEach(function(key){
@@ -28,13 +28,14 @@
 			})
 		}
 		
-		//这里为data的每一个属性都定制了一个闭包，存储着这个属性对应的所有订阅者
+		//step3.2:这里为data的每一个属性都定制了一个闭包，存储着这个属性对应的所有订阅者
 		function definePropertyVue(obj,key,val){
-			var dep = new Dep();//其实这里添加进来的是一个watcher
+			let dep = new Dep();//其实这里添加进来的是一个watcher
 			Object.defineProperty(obj,key,{
 				get:function(){
 					//如果全局变量有东西的话，就添加进来
 					//所以有一个key很重要
+					//因为每次你用vm.data[key]时，其实是调用了get(key)
 					if(Dep.target){
 						dep.subs.push(Dep.target);
 					}
@@ -42,38 +43,38 @@
 				},
 				set:function(newVal){
 					if(newVal!=val){
-						val=newVal;
+						val=newVal;//不仅仅要更新当前的val，这里可以理解为obj[key]=newVal;
 						//作为发布者要发布给所有的订阅者
-						dep.notify();
+						dep.notify();//step3.3
 					}
 				}
 			})
 		}
 		
-		//先实现nodeToElementFragment
+		//step1:先实现nodeToElementFragment
 		function nodeToDocumentFragment(node,vm){
 			let fragment = document.createDocumentFragment();
 			let child;
 			while(child = node.firstChild ){
-			console.log(child)
-				compile(child,vm);
-				fragment.append(child);//dom中的结点会被删除掉
+				console.log(child)
+				compile(child,vm);//step2
+				fragment.append(child);//dom中的结点会被删除掉，将所有的节点劫持到fragment上
 			}
 			return fragment;
 		}
 		
-		//实现model到view
+		//step2:实现model到view
 		function compile(node,vm){ //这一步是将data映射到dom树上
 			if(node.nodeType==1){//这是节点
 				let attributes= node.attributes;
 				for(let i=0;i<attributes.length;i++){
 					let attribute = attributes[i];
 					if(attribute.nodeName == 'v-model'){ //绑定了model
-						//还要给node添加监听，如果它的value改变了，那么就需要把data里的改变
+						//step4:还要给node添加监听，如果它的value改变了，那么就需要把data里的改变
 						node.addEventListener('input',function(e){
-							vm.data[attribute.nodeValue]=e.target.value;
+							vm.data[attribute.nodeValue]=e.target.value;//这里直接就调用了对应model的set方法，会强制更新所有他的订阅者
 						})
-						node.value = vm.data[attribute.nodeValue]; //vm的data
+						node.value = vm.data[attribute.nodeValue]; //vm的data赋值给当前节点
 						//还要移除它
 						node.removeAttribute('v-model');
 					}
@@ -82,17 +83,18 @@
 			
 			let reg = /\{\{(.*)\}\}/;  //这是用来测试形如{{text}}的绑定文本
 			if(node.nodeType == 3){ //text节点
-				if(reg.test(node.nodeValue)){//只拿第一个
-					let key=RegExp.$1;
-					key=key.trim();
-					node.nodeValue = vm.data[key];
+				if(reg.test(node.nodeValue)){
+					let key=RegExp.$1;//只拿第一个
+					key=key.trim();//去掉空格
+					node.nodeValue = vm.data[key];//将node的值改为vm中的
 					new Watcher(node,vm,key);//这里是订阅者
 				}
 			}
 		}
-		
+
+		//step3.3
 		function Dep(){
-			this.subs=[];
+			this.subs=[];//这个data属性所属的所有watcher
 		}
 		
 		Dep.prototype.notify = function(){
@@ -100,12 +102,12 @@
 		}
 		
 		function Watcher(node,vm,name){
-			Dep.target=this;
+			Dep.target=this;//这样能够在调用的时候将自己添加到自己绑定的data上去
 			this.name=name;
 			this.node=node;
 			this.vm=vm;
 			this.update();
-			Dep.target=null;
+			Dep.target=null;//这样不会出问题
 		}
 		
 		Watcher.prototype={
@@ -114,7 +116,8 @@
 				this.node.nodeValue=this.value;
 			},
 			get:function(){
-				this.value=this.vm.data[this.name];
+				this.value=this.vm.data[this.name];//这里是为了触发vm中data的get函数，这样就能将自己的这个nodeWatcher添加到绑定的data上的列表中
+				//在修改值更新的时候，虽然会调用，但是那时候Dep.target是null，所以不会有问题
 			}
 		}
 		

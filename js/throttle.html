@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<button id='1'>1s执行一次</button>
+	</body>
+	<script>
+		function throttle(fn,threshold=250){
+		    let timer;
+		    let lastExecuteTime;
+		    return function () {
+				const context = this;
+				const args = arguments;
+				let now = +new Date();//+表示将date变成数字
+				if(lastExecuteTime && now < lastExecuteTime + threshold ){
+				    //如果执行过一次并且时间间隔还没有到threshold
+					clearTimeout(timer);
+					// lastExecuteTime=now;
+					timer = setTimeout(function () {
+						lastExecuteTime = +new Date();
+					    fn.apply(context,args)
+                    },threshold - (lastExecuteTime-now));
+				}else{
+				    lastExecuteTime = now;
+				    fn.apply(context,args);
+				}
+            }
+		}
+		document.getElementById("1").onclick=throttle(function () {
+			console.log(+new Date())
+        },1000)
+	</script>
+</html>
