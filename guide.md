@@ -1,6 +1,9 @@
 >##browser
 >+ 关于url后面的#  **->** #afterUrl.md
 
+>##designPatterns
+>+ 单例模式  **->** singleton.js
+
 >##js
 >+ bind函数的原理以及实现 **->** bind.html **or** [Javascript中bind()方法的使用与实现](https://segmentfault.com/a/1190000002662251)
 >+ debounce（防抖动）的实现 **->** debounce.html **or** [Javascript 的 Debounce 和 Throttle 的原理及实现](https://github.com/lishengzxc/bblog/issues/7)
