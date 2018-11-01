@@ -12,5 +12,6 @@
 >+ js继承的那些事 **->** inherit.js **参考自** [JavaScript继承详解(Klass)](https://www.jianshu.com/p/b0b8154a58e0)
 >+ js浅拷贝和深拷贝 **->** clone.js **参考自** [JavaScript中的浅拷贝和深拷贝](https://segmentfault.com/a/1190000008637489)
 >+ 判断js数据类型的四种方法 **->** typeof.js **参考自** [判断JS数据类型的四种方法](https://www.cnblogs.com/onepixel/p/5126046.html)
+>+ js正则表达式 **->** regularExpression **参考自** [JS正则表达式完整教程](https://juejin.im/post/5965943ff265da6c30653879)
 >##vue
 >+ vue的双向绑定的简单实现 **->** tow-way-binding.html **参考自** [JavaScript Object.create vs new Function() 的区别](http://fe2x.cc/2017/10/14/Object-create-and-new-JavaScript/)

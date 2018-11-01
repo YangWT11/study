@@ -84,7 +84,7 @@
 			let reg = /\{\{(.*)\}\}/;  //这是用来测试形如{{text}}的绑定文本
 			if(node.nodeType == 3){ //text节点
 				if(reg.test(node.nodeValue)){
-					let key=RegExp.$1;//只拿第一个
+					let key=RegExp.$1;//拿（）里的文本
 					key=key.trim();//去掉空格
 					node.nodeValue = vm.data[key];//将node的值改为vm中的
 					new Watcher(node,vm,key);//这里是订阅者
