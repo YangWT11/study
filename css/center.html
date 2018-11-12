@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="wrapper1">
+    <div class="inner1">
+        <p>margin:auto水平垂直居中，内部大小已知（可以是百分比，也可以是固定像素）</p>
+    </div>
+</div>
+
+<div class="wrapper2">
+    <div class="inner2">
+        <p>top+margin-top:-来实现水平垂直居中，内部大小已知（固定像素）</p>
+    </div>
+</div>
+
+<div class="wrapper3">
+    <div class="inner3">
+        <p>transform水平垂直居中，内部大小已知（固定像素和百分比都可以）</p>
+    </div>
+</div>
+
+<div class="wrapper4">
+    <div class="inner4">
+        <p>父元素display:table-cell</p>
+    </div>
+</div>
+
+<div class="wrapper5">
+    <p class="inner5">flex弹性盒子布局（内部大小无所谓），建议看完guide中的display文章</p>
+</div>
+
+<div class="wrapper6">
+    <p class="inner6">inline-block（内部大小无所谓，内联元素原本默认就是垂直居中，然后设置一个text-align为center即可）</p>
+</div>
+
+<div class="wrapper7">
+    <div class="inner7">calc()+margin方法（已知内部元素固定像素高宽）</div>
+</div>
+
+</body>
+<style>
+
+    body div{
+        margin: 50px 0 0 0;
+        background-color: blue;
+    }
+
+    body div div {
+        background-color:red;
+    }
+
+    .wrapper1{
+        position: relative;
+        /*这个relative就是给子节点的absolute来定位的，用absolute和fixed都行，但是那就得父节点有大小*/
+        height: 100px;
+    }
+    .inner1{
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        /*这里的absolute意思是根据脱离文档流，根据有relative的父节点来定位，根据父节点的偏移量是0，然后margin设置为自动即可*/
+        width: 50%;
+        height: 40px;
+        /*必须要知道子节点的宽度高度，可以是百分比也可以是固定像素*/
+        margin: auto;
+        /*margin设置为自动即可*/
+    }
+
+    .wrapper2{
+        height: 100px;
+        position: relative;
+    }
+
+    .inner2{
+        position: absolute;
+        width: 400px;
+        height:50px;
+        top: 50%;
+        left:50%;
+        /*这里的意思是距离顶部50%的距离，然后再用margin-top为负来向上位移半个自己的身为以达到居中的目的*/
+        margin-left: -200px;
+        margin-top: -25px;
+    }
+
+    .wrapper3{
+        height: 100px;
+        position: relative;
+    }
+
+    .inner3{
+        position: absolute;
+        width: 50%;
+        height:50px;
+        top: 50%;
+        left:50%;
+        margin: 0;
+        /*这是为了取消div之间的距离*/
+        /*这里的意思是距离顶部50%的距离，然后再用margin-top为负来向上位移半个自己的身为以达到居中的目的*/
+        transform: translate(-50%,-50%);
+    }
+
+    .wrapper4{
+        display: table-cell;
+        height: 100px;
+        vertical-align: middle;
+
+        /*这是用来和其他div区分开来的*/
+        position: relative;
+        top: 50px;
+    }
+
+    .inner4{
+        width: 50%;
+        /*其实这里完全可以用margin auto解决，table-cell后面再研究*/
+        margin: 0 auto;
+    }
+
+    .wrapper5{
+        height: 100px;
+        top: 50px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .inner5{
+        margin:0;
+        background-color:red;
+    }
+
+    .wrapper6{
+        position: relative;
+        top: 50px;
+        text-align:center;
+    }
+
+    .inner6{
+        background:red;
+        display:inline-block;
+    }
+
+
+    .wrapper7{
+        position: relative;
+        top: 50px;
+        height:100px;
+    }
+    .inner7{
+        width:400px;
+        height:50px;
+        position: relative;
+        margin-left:calc((100% - 400px)/2);
+        margin-top:calc((100% - 50px)/2);
+    }
+</style>
+</html>
