@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <p>最常用的三种隐藏方法，display:none/visibility:hidden/opacity:0</p>
+        <p>display:none，会让元素从文档流消失，但是并不会在dom树中删除，因为从文档流中消失，会触发浏览器的重排和重绘</p>
+        <p>因为它从文档流中消失了，所以鼠标无法点击到该元素触发其点击事件，然而它仍然在dom树中，因此能通过js获取它并触发它的点击</p><br>
+        <p>visibility:hidden，不会让元素从文档流消失，就更不会从dom树中删掉，因此只会触发重绘</p>
+        <p>虽然它仍然占据着文档流，但是无法点击得到它，但是仍然可以直接通过dom操作获得它并触发它的点击</p><br>
+        <p>opacity:0，不会让元素从文档中消失，也不会从dom树中删除，只会触发重绘</p>
+        <p>同时它可以触发点击事件</p><br>
+        <p>还有一些骚操作</p>
+        <p>height: 0; width: 0; padding: 0; margin: 0; border: 0;overflow:hidden ...都为0了，点击不到（overflow:hidden是为了让其子元素也隐藏）</p>
+        <p>position: absolute; left: 1000000px; top: 100000px; ...无法点击</p>
+        <p>z-index: -1000; ...这里要求有其他元素能覆盖住它，同时也无法点击得到被覆盖的该元素</p>
+    </div>
+    <div>
+        <button>这个按钮是用来直接触发区域的点击事件</button>
+    </div>
+    <div>
+        <input type="radio" name="hide" value="0" checked />show
+        <input type="radio" name='hide' value="1" />display:none
+        <input type="radio" name='hide' value="2" />visibility:hidden
+        <input type="radio" name='hide' value="3" />opacity:0
+    </div>
+    <div id="area">这是要显示的区域</div><label>这个是用来体现它占据了文档流位置的小标签</label>
+</body>
+<style>
+    #area{
+        width: 300px;
+        height: 300px;
+        margin: auto;
+        background-color: red;
+        text-align: center;
+    }
+    .display{
+        display: none;
+    }
+    .hidden{
+        visibility: hidden;
+    }
+    .opacity{
+        opacity: 0;
+    }
+</style>
+<script>
+    function areaAlert(){
+        alert('我触发了事件');
+    }
+    var area=document.getElementById('area');
+    area.onclick=areaAlert;
+    document.getElementsByTagName('button')[0].onclick=function () {
+        area.click();
+    };
+    document.getElementsByName('hide')[0].onclick=function () {
+        area.className='';
+    }
+    document.getElementsByName('hide')[1].onclick=function () {
+        area.className='display';
+    }
+    document.getElementsByName('hide')[2].onclick=function () {
+        area.className='hidden';
+    }
+    document.getElementsByName('hide')[3].onclick=function () {
+        area.className='opacity';
+    }
+</script>
+</html>

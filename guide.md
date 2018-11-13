@@ -1,6 +1,7 @@
 >##browser
 >+ 在浏览器输入一个url到页面渲染的全过程 **->** pageRender.md 参考自 [从输入URL到页面加载的过程](https://dailc.github.io/2018/03/12/whenyouenteraurl.html)
 >+ 关于url后面的#  **->** #afterUrl.md
+>+ 网页性能（重排和重绘） **->** reflow&repaint.md 参考自[网页性能管理详解](http://www.ruanyifeng.com/blog/2015/09/web-page-performance-in-depth.html)
 
 >##designPatterns
 >+ 单例模式  **->** singleton.js
@@ -21,7 +22,8 @@
 
 >###css
 >+ css中px，em，rem的区别 **->** cssUnit.md **参考自** [CSS：区别 px、em、rem](https://segmentfault.com/a/1190000005936910)
->+ 实现水平垂直居中的5种方法 **->** center.html **参考自** [实现水平垂直居中的5种方法](https://www.jianshu.com/p/38beb5ef2511)
+>+ 实现水平垂直居中的5种方法 **->** centerAlignment.html **参考自** [实现水平垂直居中的5种方法](https://www.jianshu.com/p/38beb5ef2511)
 >+ css中position属性详解 **->** position.md **参考自** [CSS中position属性( absolute | relative | static | fixed )详解](https://blog.csdn.net/chen_zw/article/details/8741365)
 >+ css中display属性详解 **->** display.md **参考自**[CSS display 属性详解](https://segmentfault.com/a/1190000006047872)&[Flex 布局教程：语法篇](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
 >+ 块级元素和内联元素 **->** block*inline.md **参考自** [说说行内元素和块级元素](https://www.jianshu.com/p/d69878549d92)
+>+ 元素的隐藏 **->** elementHidden.html **参考自** [元素的显示与隐藏（让元素“看不见”）](https://www.jianshu.com/p/0a6168f485e1)
