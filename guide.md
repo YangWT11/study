@@ -16,6 +16,7 @@
 >+ 判断js数据类型的四种方法 **->** typeof.js **参考自** [判断JS数据类型的四种方法](https://www.cnblogs.com/onepixel/p/5126046.html)
 >+ js正则表达式 **->** regularExpression **参考自** [JS正则表达式完整教程](https://juejin.im/post/5965943ff265da6c30653879)
 >+ [深入理解JavaScript执行上下文、函数堆栈、提升的概念](https://segmentfault.com/a/1190000009041008)
+>+ this绑定问题 **->** this.js **参考自** [深入理解 js this 绑定 ( 无需死记硬背，尾部有总结和面试题解析 )](https://segmentfault.com/a/1190000011194676)
 
 >##vue
 >+ vue的双向绑定的简单实现 **->** tow-way-binding.html **参考自** [JavaScript Object.create vs new Function() 的区别](http://fe2x.cc/2017/10/14/Object-create-and-new-JavaScript/)
