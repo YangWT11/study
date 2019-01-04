@@ -6,3 +6,4 @@ pt, pc: 点（Points (1/72 of an inch)）， 十二点活字（ picas (12 points
 无论父节点字体大小，子节点大小都是16px。然而```1rem=16px```不是很好记，因此一般给body添加```font-size=62.5%```，
 这样```1rem=10px```，方便使用
 
+>+ 可参考[对于页面适配，你应该使用px还是rem](https://segmentfault.com/a/1190000015867354)
